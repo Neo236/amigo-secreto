@@ -4,9 +4,7 @@ Este es un sencillo pero divertido proyecto para sortear el "Amigo Secreto". La 
 
 ## 🎨 Diseño de la Aplicación
 
-![Captura de pantalla de la aplicación Amigo Secreto](https://i.imgur.com/URL_DE_TU_IMAGEN.png)
-
-*(Nota: Reemplaza la URL de arriba con una captura de pantalla real de tu proyecto para que la imagen sea visible.)*
+![Captura de pantalla de la aplicación](assets/captura-de-pantalla.png)
 
 ## ✨ Características Principales
 
@@ -34,13 +32,18 @@ Este es un sencillo pero divertido proyecto para sortear el "Amigo Secreto". La 
 *   **JavaScript**: Para toda la lógica de la aplicación, como agregar amigos, validar entradas y realizar el sorteo.
 
 ## 📂 Estructura de Archivos
+
+```
 .
 ├── assets
 │   ├── amigo-secreto.png
+│   ├── captura-de-pantalla.png
 │   └── play_circle_outline.png
+├── app.js
 ├── index.html
 ├── style.css
-└── app.js
+└── README.md
+```
 
 *   **`index.html`**: Contiene la estructura principal de la página.
 *   **`style.css`**: Contiene todos los estilos para dar formato a la aplicación.
