@@ -20,9 +20,35 @@ function agregarAmigo()
     }
 
     amigos.push(nombreAmigo);
-    let listaDeAmigos = document.getElementById('listaAmigos');
-    listaDeAmigos.textContent = amigos.join(', ');
+
+    actualizarLista();
+    
     nombreAmigoInput.value = '';
     nombreAmigoInput.focus();
 }
 
+function actualizarLista() {
+    let listaHTML = document.getElementById('listaAmigos');
+
+    listaHTML.innerHTML = "";
+
+    for (let i = 0; i < amigos.length; i++) {
+        let elementoAmigo = document.createElement('li');
+        elementoAmigo.textContent = amigos[i];
+        listaHTML.appendChild(elementoAmigo)
+    }
+}
+
+function sortearAmigo() {
+    if (amigos.length < 2) {
+        alert("Debes agregar al menos 2 amigos para realizar el sorteo.");
+        return;
+    }
+
+    let indiceAleatorio = Math.floor(Math.random() * amigos.length);
+
+    let amigoSorteado = amigos[indiceAleatorio];
+
+    let resultado = document.getElementById('resultado');
+    resultado.innerHTML = `El amigo secreto es: <strong>${amigoSorteado}</strong>`;
+}
