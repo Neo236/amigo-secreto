@@ -1,5 +1,7 @@
 # Proyecto Amigo Secreto
 
+> 📦 **Repositorio:** `alura-challenge-amigo-secreto` · Challenge de **Alura Latam** · Programa **Oracle Next Education (ONE)**
+
 Este es un sencillo pero divertido proyecto para sortear el "Amigo Secreto". La aplicación permite a los usuarios agregar los nombres de los participantes y luego realizar un sorteo para descubrir quién será el amigo secreto. El principal objetivo de este proyecto es poner en práctica y fortalecer las habilidades de lógica de programación con JavaScript.
 
 ## 🎨 Diseño de la Aplicación
