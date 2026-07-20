@@ -7,8 +7,8 @@
 > Challenge de **Alura Latam** · Programa **Oracle Next Education (ONE)**
 
 Sorteo de amigo secreto en el navegador: cargás los participantes y la aplicación arma
-todas las asignaciones de una vez, garantizando que nadie se toque a sí mismo. Conserva
-la interfaz y los assets originales del challenge.
+todas las asignaciones de una vez, cuidando que a nadie le toque su propio nombre.
+Conserva la interfaz y los assets originales del challenge.
 
 ### 👉 [Probalo acá](https://neo236.github.io/amigo-secreto/)
 
@@ -40,9 +40,9 @@ María ──▶ Iñaki ──▶ Lautaro
   └────────────────────┘
 ```
 
-Eso resuelve dos problemas de una: nadie se toca a sí mismo, y no quedan subgrupos
-cerrados —dos personas intercambiándose entre ellas mientras el resto queda aparte—, que
-es exactamente lo que pasa si se sortea cada par por separado.
+Eso resuelve dos problemas de una: a nadie le toca su propio nombre, y no quedan
+subgrupos cerrados —dos personas intercambiándose entre ellas mientras el resto queda
+aparte—, que es exactamente lo que pasa si se sortea cada par por separado.
 
 ## 🚀 Cómo correrlo
 

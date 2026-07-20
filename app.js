@@ -28,11 +28,19 @@ function limpiarResultado() {
     resultado.innerHTML = '';
 }
 
-function crearBoton(texto, etiqueta, alHacerClic, clase) {
+// Íconos SVG estáticos (sin datos de usuario) para los controles de la lista.
+const ICONO_EDITAR = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>';
+const ICONO_QUITAR = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>';
+const ICONO_GUARDAR = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>';
+const ICONO_CANCELAR = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
+
+// Crea un botón de ícono. El SVG es estático (no hay datos de usuario), por eso innerHTML
+// es seguro; los nombres de participantes siempre se ponen con textContent.
+function crearBoton(icono, etiqueta, alHacerClic, clase) {
     const boton = document.createElement('button');
     boton.type = 'button';
     boton.className = clase;
-    boton.textContent = texto;
+    boton.innerHTML = icono;
     boton.setAttribute('aria-label', etiqueta);
     boton.addEventListener('click', alHacerClic);
     return boton;
@@ -118,8 +126,8 @@ function actualizarLista() {
                 else if (evento.key === 'Escape') salirDeEdicion();
             });
 
-            const guardar = crearBoton('✓', 'Guardar cambios', () => confirmarEdicion(i, campo.value), 'name-btn ok');
-            const cancelar = crearBoton('✕', 'Cancelar edición', salirDeEdicion, 'name-btn');
+            const guardar = crearBoton(ICONO_GUARDAR, 'Guardar cambios', () => confirmarEdicion(i, campo.value), 'name-btn ok');
+            const cancelar = crearBoton(ICONO_CANCELAR, 'Cancelar edición', salirDeEdicion, 'name-btn');
 
             li.append(campo, guardar, cancelar);
             listaAmigos.appendChild(li);
@@ -130,11 +138,11 @@ function actualizarLista() {
             texto.className = 'name-text';
             texto.textContent = amigo;
 
-            const editar = crearBoton('✎', `Editar ${amigo}`, () => {
+            const editar = crearBoton(ICONO_EDITAR, `Editar ${amigo}`, () => {
                 editando = i;
                 actualizarLista();
             }, 'name-btn');
-            const quitar = crearBoton('✕', `Quitar ${amigo}`, () => quitarAmigo(i), 'name-btn del');
+            const quitar = crearBoton(ICONO_QUITAR, `Quitar ${amigo}`, () => quitarAmigo(i), 'name-btn del');
 
             li.append(texto, editar, quitar);
             listaAmigos.appendChild(li);
