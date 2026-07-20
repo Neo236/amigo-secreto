@@ -10,9 +10,11 @@ const btnSortear = document.querySelector('.button-draw');
 const listaAmigos = document.getElementById('listaAmigos');
 const resultado = document.getElementById('resultado');
 const aviso = document.getElementById('aviso');
+const clearZone = document.getElementById('clearZone');
 
 const amigos = [];
 let editando = null; // índice del nombre en edición, o null
+let confirmandoVaciar = false;
 
 // --- Aviso en la página (reemplaza los alert() del navegador) ---
 let avisoTimer;
@@ -42,6 +44,17 @@ function crearBoton(icono, etiqueta, alHacerClic, clase) {
     boton.className = clase;
     boton.innerHTML = icono;
     boton.setAttribute('aria-label', etiqueta);
+    boton.addEventListener('click', alHacerClic);
+    return boton;
+}
+
+// Botón con texto visible y un ícono estático opcional.
+function crearBotonTexto(texto, alHacerClic, clase, icono = '') {
+    const boton = document.createElement('button');
+    boton.type = 'button';
+    boton.className = clase;
+    boton.innerHTML = icono;
+    boton.append(document.createTextNode(texto));
     boton.addEventListener('click', alHacerClic);
     return boton;
 }
@@ -108,6 +121,7 @@ function salirDeEdicion() {
 }
 
 function actualizarLista() {
+    confirmandoVaciar = false;
     listaAmigos.innerHTML = '';
 
     amigos.forEach((amigo, i) => {
@@ -148,6 +162,53 @@ function actualizarLista() {
             listaAmigos.appendChild(li);
         }
     });
+
+    renderZonaVaciar();
+}
+
+// Zona "Vaciar lista": el botón pide confirmación una vez antes de borrar todo.
+function renderZonaVaciar() {
+    clearZone.innerHTML = '';
+    if (amigos.length === 0) return;
+
+    if (confirmandoVaciar) {
+        const texto = document.createElement('span');
+        texto.className = 'clear-confirm-text';
+        texto.textContent = '¿Vaciar la lista?';
+
+        const si = crearBotonTexto('Sí, vaciar', () => {
+            amigos.length = 0;
+            editando = null;
+            limpiarResultado();
+            actualizarLista();
+            input.focus();
+        }, 'button-clear-yes');
+        si.setAttribute('aria-label', 'Sí, vaciar la lista');
+
+        const no = crearBotonTexto('Cancelar', cancelarVaciar, 'button-clear-no');
+        no.setAttribute('aria-label', 'Cancelar, no vaciar la lista');
+
+        [si, no].forEach((boton) => boton.addEventListener('keydown', (evento) => {
+            if (evento.key === 'Escape') cancelarVaciar();
+        }));
+
+        clearZone.append(texto, si, no);
+        no.focus();
+    } else {
+        const vaciar = crearBotonTexto('Vaciar lista', () => {
+            confirmandoVaciar = true;
+            renderZonaVaciar();
+        }, 'button-clear', ICONO_QUITAR);
+        vaciar.setAttribute('aria-label', 'Vaciar la lista de participantes');
+        clearZone.append(vaciar);
+    }
+}
+
+function cancelarVaciar() {
+    confirmandoVaciar = false;
+    renderZonaVaciar();
+    const boton = clearZone.querySelector('.button-clear');
+    if (boton) boton.focus();
 }
 
 // --- Sortear ---

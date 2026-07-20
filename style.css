@@ -172,6 +172,75 @@ ul {
     border: 0;
 }
 
+/* Vaciar lista + confirmación en página */
+.clear-zone {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.clear-zone:empty {
+    display: none;
+}
+
+.button-clear,
+.button-clear-no {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border: 1.5px solid var(--color-tertiary);
+    border-radius: 20px;
+    box-shadow: none;
+    background-color: transparent;
+    color: var(--color-text);
+    font-family: "Inter", sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.button-clear svg {
+    width: 15px;
+    height: 15px;
+}
+
+.button-clear:hover {
+    border-color: var(--color-button);
+    color: var(--color-button);
+}
+
+.button-clear-no:hover {
+    border-color: var(--color-text);
+}
+
+.clear-confirm-text {
+    font-family: "Inter", sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--color-text);
+}
+
+.button-clear-yes {
+    padding: 6px 16px;
+    border: none;
+    border-radius: 20px;
+    box-shadow: none;
+    background-color: var(--color-button);
+    color: var(--color-white);
+    font-family: "Inter", sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.button-clear-yes:hover {
+    background-color: var(--color-button-hover);
+}
+
 /* Botón de sortear título */
 .button-draw {
     display: flex;
