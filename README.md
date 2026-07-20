@@ -5,9 +5,9 @@
 Un sorteo de amigo secreto para el navegador. Cargás los nombres y arma toda la ronda de
 una: a cada persona le asigna a quién le regala, sin que a nadie le toque su propio nombre.
 
-Lo hice para el challenge de **Alura Latam** (programa Oracle Next Education). La interfaz
-es la del challenge; lo que le puse encima es la lógica del sorteo con tests, la gestión de
-la lista y algunos detalles de accesibilidad.
+Lo hice para el challenge de **Alura Latam** (programa Oracle Next Education). La base visual
+es la del challenge; encima le sumé la lógica del sorteo con tests, la gestión de la lista
+(agregar, editar, quitar, vaciar), el resultado a colores y detalles de accesibilidad.
 
 **[Probalo acá →](https://neo236.github.io/amigo-secreto/)**
 
@@ -22,8 +22,9 @@ la lista y algunos detalles de accesibilidad.
   lleva su color: como todo es un solo círculo, seguís quién le regala a quién de un vistazo.
 - Todo anda con teclado: Enter agrega, y editando un nombre Enter guarda y Escape cancela.
 
-No hay dependencias en runtime ni paso de build: es HTML, CSS y JavaScript, y lo que está en
-el repo es lo que corre.
+El sitio no usa librerías ni paso de build: HTML, CSS y JS que el navegador corre tal cual
+(lo único externo son las tipografías de Google Fonts, con fallback del sistema). La única
+dependencia es de desarrollo —`vitest`, para los tests—; la página no la usa.
 
 ## El sorteo
 
@@ -41,10 +42,13 @@ Así nadie se toca a sí mismo y no quedan subgrupos cerrados.
 
 ## Correrlo
 
-Usa módulos ES, así que hay que servirlo por HTTP (abrir el `index.html` a mano no alcanza):
+Usa módulos ES, así que hay que servirlo por HTTP (abrir el `index.html` a mano no alcanza).
+Sirve cualquier server estático:
 
 ```bash
 npx serve .
+# o, sin Node:
+python3 -m http.server
 ```
 
 ## Tests
@@ -62,7 +66,7 @@ sin eso, un sorteo podría partirse en subgrupos sin que nadie lo note.
 
 ```
 index.html      la pantalla
-style.css       los estilos (los originales de Alura)
+style.css       los estilos (base de Alura + lo agregado)
 sorteo.js       la lógica, sin DOM
 app.js          conecta la lógica con la pantalla
 sorteo.test.js  los tests
