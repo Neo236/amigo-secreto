@@ -1,4 +1,5 @@
-import { describe, expect, it } from 'vitest';
+import { describe, it } from 'node:test';
+import assert from 'node:assert/strict';
 import {
     MAX_LARGO_NOMBRE,
     esNombreValido,
@@ -10,53 +11,53 @@ import {
 
 describe('esNombreValido', () => {
     it('acepta un nombre común', () => {
-        expect(esNombreValido('Juan')).toBe(true);
+        assert.equal(esNombreValido('Juan'), true);
     });
 
     it('acepta acentos y ñ', () => {
-        expect(esNombreValido('María')).toBe(true);
-        expect(esNombreValido('Iñaki')).toBe(true);
+        assert.equal(esNombreValido('María'), true);
+        assert.equal(esNombreValido('Iñaki'), true);
     });
 
     it('acepta nombres compuestos', () => {
-        expect(esNombreValido('Ana María de la Cruz')).toBe(true);
+        assert.equal(esNombreValido('Ana María de la Cruz'), true);
     });
 
     it('rechaza una cadena vacía o con solo espacios', () => {
-        expect(esNombreValido('')).toBe(false);
-        expect(esNombreValido('   ')).toBe(false);
+        assert.equal(esNombreValido(''), false);
+        assert.equal(esNombreValido('   '), false);
     });
 
     it('rechaza algo sin ninguna letra', () => {
-        expect(esNombreValido('123')).toBe(false);
-        expect(esNombreValido('!!!')).toBe(false);
+        assert.equal(esNombreValido('123'), false);
+        assert.equal(esNombreValido('!!!'), false);
     });
 
     it('rechaza un nombre desmesuradamente largo', () => {
         // Regresión: sin tope, un pegado de texto rompía el layout de la lista.
-        expect(esNombreValido('a'.repeat(MAX_LARGO_NOMBRE + 1))).toBe(false);
+        assert.equal(esNombreValido('a'.repeat(MAX_LARGO_NOMBRE + 1)), false);
     });
 
     it('acepta un nombre justo en el límite', () => {
-        expect(esNombreValido('a'.repeat(MAX_LARGO_NOMBRE))).toBe(true);
+        assert.equal(esNombreValido('a'.repeat(MAX_LARGO_NOMBRE)), true);
     });
 });
 
 describe('estaDuplicado', () => {
     it('encuentra el nombre exacto', () => {
-        expect(estaDuplicado('Juan', ['Ana', 'Juan'])).toBe(true);
+        assert.equal(estaDuplicado('Juan', ['Ana', 'Juan']), true);
     });
 
     it('no distingue mayúsculas', () => {
-        expect(estaDuplicado('JUAN', ['juan'])).toBe(true);
+        assert.equal(estaDuplicado('JUAN', ['juan']), true);
     });
 
     it('devuelve falso si no está', () => {
-        expect(estaDuplicado('Pedro', ['Ana', 'Juan'])).toBe(false);
+        assert.equal(estaDuplicado('Pedro', ['Ana', 'Juan']), false);
     });
 
     it('sobre una lista vacía devuelve falso', () => {
-        expect(estaDuplicado('Ana', [])).toBe(false);
+        assert.equal(estaDuplicado('Ana', []), false);
     });
 });
 
@@ -64,33 +65,33 @@ describe('mezclar', () => {
     it('no modifica el arreglo original', () => {
         const original = ['a', 'b', 'c'];
         mezclar(original);
-        expect(original).toEqual(['a', 'b', 'c']);
+        assert.deepEqual(original, ['a', 'b', 'c']);
     });
 
     it('conserva todos los elementos', () => {
         const nombres = ['Ana', 'Juan', 'Pedro', 'Luz'];
-        expect(mezclar(nombres).sort()).toEqual([...nombres].sort());
+        assert.deepEqual(mezclar(nombres).sort(), [...nombres].sort());
     });
 
     it('con azar fijo da un resultado determinista', () => {
         // Fisher-Yates con random()=0 siempre intercambia con la posición 0:
         // i=2 deja ['c','b','a'] e i=1 deja ['b','c','a'].
-        expect(mezclar(['a', 'b', 'c'], () => 0)).toEqual(['b', 'c', 'a']);
+        assert.deepEqual(mezclar(['a', 'b', 'c'], () => 0), ['b', 'c', 'a']);
     });
 
     it('aguanta listas vacías y de un elemento', () => {
-        expect(mezclar([])).toEqual([]);
-        expect(mezclar(['solo'])).toEqual(['solo']);
+        assert.deepEqual(mezclar([]), []);
+        assert.deepEqual(mezclar(['solo']), ['solo']);
     });
 });
 
 describe('generarPares', () => {
     it('arma un par por participante', () => {
-        expect(generarPares(['a', 'b', 'c'])).toHaveLength(3);
+        assert.equal(generarPares(['a', 'b', 'c']).length, 3);
     });
 
     it('encadena a cada uno con el siguiente y cierra el círculo', () => {
-        expect(generarPares(['a', 'b', 'c'])).toEqual([
+        assert.deepEqual(generarPares(['a', 'b', 'c']), [
             { de: 'a', para: 'b' },
             { de: 'b', para: 'c' },
             { de: 'c', para: 'a' },
@@ -98,7 +99,7 @@ describe('generarPares', () => {
     });
 
     it('con dos participantes se regalan entre sí', () => {
-        expect(generarPares(['a', 'b'])).toEqual([
+        assert.deepEqual(generarPares(['a', 'b']), [
             { de: 'a', para: 'b' },
             { de: 'b', para: 'a' },
         ]);
@@ -110,23 +111,23 @@ describe('sortear', () => {
 
     it('nadie se regala a sí mismo', () => {
         for (let i = 0; i < 200; i++) {
-            expect(sortear(participantes).every((par) => par.de !== par.para)).toBe(true);
+            assert.equal(sortear(participantes).every((par) => par.de !== par.para), true);
         }
     });
 
     it('cada participante regala exactamente una vez', () => {
         const dan = sortear(participantes).map((par) => par.de);
-        expect(new Set(dan).size).toBe(participantes.length);
+        assert.equal(new Set(dan).size, participantes.length);
     });
 
     it('cada participante recibe exactamente una vez', () => {
         const reciben = sortear(participantes).map((par) => par.para);
-        expect(new Set(reciben).size).toBe(participantes.length);
+        assert.equal(new Set(reciben).size, participantes.length);
     });
 
     it('forma un único círculo, sin subgrupos cerrados', () => {
-        // Lo importante del sorteo: si hubiera dos ciclos, un par se intercambiaría
-        // entre sí y quedaría aislado del resto.
+        // Lo importante del sorteo: si hubiera dos ciclos, un par se intercambiaría entre
+        // sí y quedaría aislado del resto.
         for (let i = 0; i < 50; i++) {
             const pares = sortear(participantes);
             const siguiente = new Map(pares.map((par) => [par.de, par.para]));
@@ -138,8 +139,8 @@ describe('sortear', () => {
                 actual = siguiente.get(actual);
             }
 
-            expect(visitados.size).toBe(participantes.length);
-            expect(actual).toBe(participantes[0]);
+            assert.equal(visitados.size, participantes.length);
+            assert.equal(actual, participantes[0]);
         }
     });
 });

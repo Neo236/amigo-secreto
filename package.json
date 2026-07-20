@@ -5,11 +5,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "vitest run",
-    "test:watch": "vitest"
-  },
-  "devDependencies": {
-    "vitest": "^2.1.8"
+    "test": "node --test",
+    "test:watch": "node --test --watch"
   },
   "author": "Lautaro Mambrin",
   "license": "MIT"

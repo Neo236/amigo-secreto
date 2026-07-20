@@ -22,9 +22,9 @@ es la del challenge; encima le sumé la lógica del sorteo con tests, la gestió
   lleva su color: como todo es un solo círculo, seguís quién le regala a quién de un vistazo.
 - Todo anda con teclado: Enter agrega, y editando un nombre Enter guarda y Escape cancela.
 
-El sitio no usa librerías ni paso de build: HTML, CSS y JS que el navegador corre tal cual
-(lo único externo son las tipografías de Google Fonts, con fallback del sistema). La única
-dependencia es de desarrollo —`vitest`, para los tests—; la página no la usa.
+El proyecto no tiene dependencias, ni para el sitio ni para los tests. El sitio son HTML, CSS
+y JS que el navegador corre tal cual (lo único externo son las tipografías de Google Fonts,
+con fallback del sistema); los tests usan el runner integrado de Node, sin instalar nada.
 
 ## El sorteo
 
@@ -53,14 +53,15 @@ python3 -m http.server
 
 ## Tests
 
+Sin instalar nada: los corre el runner integrado de Node (hace falta Node 20+).
+
 ```bash
-npm install
-npm test
+npm test        # o directamente: node --test
 ```
 
-La lógica vive en `sorteo.js`, separada del DOM, con 22 tests en [Vitest](https://vitest.dev).
-El que más me interesa recorre el resultado como un grafo y comprueba que sea un único ciclo:
-sin eso, un sorteo podría partirse en subgrupos sin que nadie lo note.
+La lógica vive en `sorteo.js`, separada del DOM, con 22 tests. El que más me interesa recorre
+el resultado como un grafo y comprueba que sea un único ciclo: sin eso, un sorteo podría
+partirse en subgrupos sin que nadie lo note.
 
 ## Cómo está armado
 
