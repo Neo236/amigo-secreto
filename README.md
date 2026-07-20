@@ -51,6 +51,10 @@ npx serve .
 python3 -m http.server
 ```
 
+Si solo querés la app para probarla local, bajá el zip desde
+[Releases](https://github.com/Neo236/amigo-secreto/releases): trae únicamente los archivos
+de la app (HTML, CSS, JS y assets), sin los tests ni el tooling.
+
 ## Tests
 
 Sin instalar nada: los corre el runner integrado de Node (hace falta Node 20+).
