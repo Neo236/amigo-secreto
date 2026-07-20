@@ -19,9 +19,12 @@ Conserva la interfaz y los assets originales del challenge.
 * **Carga de participantes** con validación en la página: nada de nombres vacíos,
   repetidos, sin ninguna letra ni de largo desmedido. Los avisos salen en pantalla, no
   como alertas del navegador.
-* **Editá y quitá** cualquier participante de la lista antes de sortear.
+* **Gestión de la lista:** editá o quitá cualquier participante, o vaciá la lista entera
+  (con una confirmación antes de borrar).
 * **Sorteo completo:** no elige un ganador, arma la ronda entera. Cada participante le
   regala a otro y recibe de un tercero (mínimo 3 para que tenga sentido).
+* **Resultado a colores:** cada nombre lleva su propio color, repartido por el círculo
+  cromático, así se sigue el ciclo de un vistazo.
 * **Soporte de teclado:** Enter agrega el nombre; en edición, Enter guarda y Escape
   cancela.
 * **Cero dependencias en tiempo de ejecución:** HTML, CSS y JavaScript a secas. No hay
