@@ -42,18 +42,12 @@ Así nadie se toca a sí mismo y no quedan subgrupos cerrados.
 
 ## Correrlo
 
-Usa módulos ES, así que hay que servirlo por HTTP (abrir el `index.html` a mano no alcanza).
-Sirve cualquier server estático:
+No necesita nada: abrí `index.html` en el navegador (doble clic) y funciona. Para eso los
+scripts se cargan de forma clásica (sin módulos ES), así anda tal cual desde el disco.
 
-```bash
-npx serve .
-# o, sin Node:
-python3 -m http.server
-```
-
-Si solo querés la app para probarla local, bajá el zip desde
-[Releases](https://github.com/Neo236/amigo-secreto/releases): trae únicamente los archivos
-de la app (HTML, CSS, JS y assets), sin los tests ni el tooling.
+Si querés solo la app —sin los tests ni el tooling—, bajá el zip desde
+[Releases](https://github.com/Neo236/amigo-secreto/releases). O probala online en
+[neo236.github.io/amigo-secreto](https://neo236.github.io/amigo-secreto/).
 
 ## Tests
 

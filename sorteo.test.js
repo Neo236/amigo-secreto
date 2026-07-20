@@ -1,13 +1,15 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
-import {
+import './sorteo.js';
+
+const {
     MAX_LARGO_NOMBRE,
     esNombreValido,
     estaDuplicado,
     generarPares,
     mezclar,
     sortear,
-} from './sorteo.js';
+} = globalThis.Sorteo;
 
 describe('esNombreValido', () => {
     it('acepta un nombre común', () => {

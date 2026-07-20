@@ -1,4 +1,6 @@
-import { esNombreValido, estaDuplicado, sortear } from './sorteo.js';
+'use strict';
+
+const { esNombreValido, estaDuplicado, sortear } = window.Sorteo;
 
 const input = document.getElementById('amigo');
 const btnAgregar = document.querySelector('.button-add');
