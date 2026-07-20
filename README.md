@@ -1,53 +1,87 @@
-# Proyecto Amigo Secreto
+# 🎁 Amigo Secreto
 
-> 📦 **Repositorio:** `alura-challenge-amigo-secreto` · Challenge de **Alura Latam** · Programa **Oracle Next Education (ONE)**
+[![CI](https://github.com/Neo236/amigo-secreto/actions/workflows/ci.yml/badge.svg)](https://github.com/Neo236/amigo-secreto/actions/workflows/ci.yml)
+![JavaScript](https://img.shields.io/badge/JavaScript-ES2022-f7df1e.svg)
+![Sin dependencias](https://img.shields.io/badge/dependencias-0-brightgreen.svg)
 
-Este es un sencillo pero divertido proyecto para sortear el "Amigo Secreto". La aplicación permite a los usuarios agregar los nombres de los participantes y luego realizar un sorteo para descubrir quién será el amigo secreto. El principal objetivo de este proyecto es poner en práctica y fortalecer las habilidades de lógica de programación con JavaScript.
+> Challenge de **Alura Latam** · Programa **Oracle Next Education (ONE)**
 
-## 🎨 Diseño de la Aplicación
+Sorteo de amigo secreto en el navegador: cargás los participantes y la aplicación arma
+todas las asignaciones de una vez, garantizando que nadie se toque a sí mismo. Conserva
+la interfaz y los assets originales del challenge.
 
-![Captura de pantalla de la aplicación](assets/captura-de-pantalla.png)
+### 👉 [Probalo acá](https://neo236.github.io/amigo-secreto/)
 
-## ✨ Características Principales
+![Amigo Secreto: participantes cargados y el sorteo ya resuelto](assets/captura-de-pantalla.png)
 
-*   **Agregar Amigos**: Permite añadir nombres a una lista de participantes.
-*   **Validación de Nombres**:
-    *   No se pueden añadir nombres en blanco.
-    *   No se pueden agregar nombres duplicados en la lista.
-*   **Lista de Participantes**: Muestra en tiempo real los nombres que han sido agregados.
-*   **Sorteo**: Realiza un sorteo aleatorio entre los nombres de la lista para elegir al "Amigo Secreto".
-*   **Validación para el Sorteo**: Se necesita un mínimo de dos participantes para poder realizar el sorteo.
-*   **Diseño Responsivo**: La interfaz está diseñada para ser amigable y funcional en diferentes tamaños de pantalla.
+## ✨ Qué hace
 
-## 🚀 Cómo Utilizar
+* **Carga de participantes** con validación: nada de nombres vacíos, repetidos, sin
+  ninguna letra ni de largo desmedido.
+* **Sorteo completo:** no elige un ganador, arma la ronda entera. Cada participante le
+  regala a otro y recibe de un tercero.
+* **Soporte de teclado:** Enter agrega el nombre sin sacar las manos del teclado.
+* **Cero dependencias en tiempo de ejecución:** HTML, CSS y JavaScript a secas. No hay
+  build: lo que está en el repositorio es lo que corre en producción.
 
-1.  Abre el archivo `index.html` en tu navegador web.
-2.  En el campo de texto, escribe el nombre de un amigo y haz clic en el botón "Añadir".
-3.  Repite el proceso hasta que hayas agregado a todos los participantes.
-4.  Una vez que todos los nombres estén en la lista, haz clic en el botón "Sortear amigo".
-5.  ¡Y listo! El nombre del amigo secreto sorteado aparecerá en la pantalla.
+## 🧠 Cómo sortea
 
-## 🛠️ Tecnologías Utilizadas
-
-*   **HTML5**: Para la estructura y el contenido de la página web.
-*   **CSS3**: Para el diseño y la apariencia visual, incluyendo el uso de variables para una fácil personalización de los colores y fuentes de Google Fonts para la tipografía.
-*   **JavaScript**: Para toda la lógica de la aplicación, como agregar amigos, validar entradas y realizar el sorteo.
-
-## 📂 Estructura de Archivos
+El truco está en cómo se arman los pares. Se mezcla la lista con Fisher-Yates y después
+**cada uno le regala al siguiente, y el último al primero**: un solo círculo.
 
 ```
-.
-├── assets
-│   ├── amigo-secreto.png
-│   ├── captura-de-pantalla.png
-│   └── play_circle_outline.png
-├── app.js
-├── index.html
-├── style.css
-└── README.md
+Mezclada: [María, Iñaki, Lautaro]
+
+María ──▶ Iñaki ──▶ Lautaro
+  ▲                    │
+  └────────────────────┘
 ```
 
-*   **`index.html`**: Contiene la estructura principal de la página.
-*   **`style.css`**: Contiene todos los estilos para dar formato a la aplicación.
-*   **`app.js`**: Contiene toda la lógica y funcionalidad del programa.
-*   **`/assets`**: Carpeta que almacena los recursos gráficos utilizados en el proyecto.
+Eso resuelve dos problemas de una: nadie se toca a sí mismo, y no quedan subgrupos
+cerrados —dos personas intercambiándose entre ellas mientras el resto queda aparte—, que
+es exactamente lo que pasa si se sortea cada par por separado.
+
+## 🚀 Cómo correrlo
+
+La aplicación usa módulos ES, así que hay que servirla por HTTP (abrir el `index.html`
+con doble clic no alcanza: el navegador bloquea los módulos sobre `file://`).
+
+```bash
+npx serve .        # o: python3 -m http.server
+```
+
+## 🧪 Tests
+
+```bash
+npm install
+npm test
+```
+
+22 tests sobre la lógica del sorteo, que vive aparte del DOM en `sorteo.js`. El más
+interesante recorre el resultado como un grafo y verifica que forme **un único ciclo**:
+sin eso, un sorteo podría partirse en subgrupos y nadie se daría cuenta.
+
+`vitest` es la única dependencia y es de desarrollo: la página no la usa.
+
+## 📂 Estructura
+
+```
+├── assets/         Imágenes originales del challenge (logo e ícono de sortear)
+├── index.html      Estructura
+├── style.css       Estilos originales de Alura
+├── sorteo.js       Lógica del sorteo — funciones puras, sin DOM
+├── app.js          Une la lógica con la pantalla
+└── sorteo.test.js  Tests de la lógica
+```
+
+## ♿ Accesibilidad
+
+* El resultado vive en una región `aria-live="polite"`, así que un lector de pantalla
+  anuncia el sorteo apenas aparece.
+* El botón de sortear lleva `aria-label`: su ícono es una imagen, no texto.
+* Los nombres se insertan con `textContent`, nunca con `innerHTML`: un participante
+  llamado `<img onerror=...>` es texto, no código.
+
+## 🧑‍💻 Autor
+
+Desarrollado por **Lautaro "Neo" Mambrin**.

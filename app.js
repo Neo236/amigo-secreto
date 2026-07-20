@@ -1,254 +1,77 @@
-/**
- * Amigo Secreto - App Logic
- */
+// Une el DOM con la lógica del sorteo. La lógica en sí —validación, mezcla y armado
+// de pares— vive en sorteo.js, aparte y con tests, porque es lo único que puede fallar
+// en silencio. Acá solo leemos la pantalla y la actualizamos.
+import { esNombreValido, estaDuplicado, sortear } from './sorteo.js';
 
-(() => {
-    // --- State ---
-    let friendsList = [];
+const input = document.getElementById('amigo');
+const btnAgregar = document.querySelector('.button-add');
+const btnSortear = document.querySelector('.button-draw');
+const listaAmigos = document.getElementById('listaAmigos');
+const resultado = document.getElementById('resultado');
 
-    // --- DOM Elements ---
-    const elements = {
-        inputName: document.getElementById('amigo'),
-        btnAdd: document.querySelector('.button-add'),
-        btnDraw: document.querySelector('.button-draw'),
-        listContainer: document.getElementById('listaAmigos'),
-        resultContainer: document.getElementById('resultado'),
-    };
+const amigos = [];
 
-    // --- Pure Functions ---
-    
-    /**
-     * Checks if a name is valid (contains at least one letter,
-     * including accented characters and ñ).
-     * @param {string} name
-     * @returns {boolean}
-     */
-    const isValidName = (name) => /\p{L}/u.test(name);
-    
-    /**
-     * Checks if a name already exists in the list (case-insensitive).
-     * @param {string} name 
-     * @param {string[]} list 
-     * @returns {boolean}
-     */
-    const isDuplicate = (name, list) => 
-        list.some(item => item.toLowerCase() === name.toLowerCase());
+function agregarAmigo() {
+    const nombre = input.value.trim();
 
-    /**
-     * Shuffles an array using the Fisher-Yates algorithm.
-     * @param {any[]} array 
-     * @returns {any[]} A new shuffled array.
-     */
-    const shuffleArray = (array) => {
-        const shuffled = [...array];
-        for (let i = shuffled.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    if (!esNombreValido(nombre)) {
+        alert('Por favor, inserte un nombre válido.');
+        return;
+    }
+
+    if (estaDuplicado(nombre, amigos)) {
+        alert('Este nombre ya ha sido agregado. Por favor, inserte un nombre diferente.');
+        input.value = '';
+        input.focus();
+        return;
+    }
+
+    amigos.push(nombre);
+    actualizarLista();
+
+    input.value = '';
+    input.focus();
+}
+
+function actualizarLista() {
+    listaAmigos.innerHTML = '';
+    for (const amigo of amigos) {
+        const li = document.createElement('li');
+        li.textContent = amigo;
+        listaAmigos.appendChild(li);
+    }
+}
+
+function sortearAmigo() {
+    if (amigos.length < 3) {
+        alert('Debes agregar al menos 3 amigos para que el sorteo tenga sentido: con menos, cada uno sabría de una a quién le tocó.');
+        return;
+    }
+
+    // Un solo ciclo: cada uno le regala al siguiente y el último al primero. Así nadie
+    // se toca a sí mismo y no quedan subgrupos cerrados.
+    const pares = sortear(amigos);
+
+    resultado.innerHTML = '';
+    for (const { de, para } of pares) {
+        const li = document.createElement('li');
+        li.textContent = `${de} → ${para}`;
+        resultado.appendChild(li);
+    }
+}
+
+btnAgregar.addEventListener('click', agregarAmigo);
+btnSortear.addEventListener('click', sortearAmigo);
+input.addEventListener('keydown', (evento) => {
+    if (evento.key === 'Enter') agregarAmigo();
+});
+
+// El menú de información se cierra al hacer clic afuera.
+const infoMenu = document.querySelector('.info-menu');
+if (infoMenu) {
+    document.addEventListener('click', (evento) => {
+        if (infoMenu.open && !infoMenu.contains(evento.target)) {
+            infoMenu.open = false;
         }
-        return shuffled;
-    };
-
-    /**
-     * Generates Secret Santa pairs from a shuffled array.
-     * @param {string[]} shuffledList 
-     * @returns {Object[]} Array of { giver, receiver } objects.
-     */
-    const generatePairs = (shuffledList) => {
-        return shuffledList.map((giver, index) => {
-            const receiver = shuffledList[(index + 1) % shuffledList.length];
-            return { giver, receiver };
-        });
-    };
-
-    // --- UI & DOM Functions ---
-
-    /**
-     * Displays a temporary toast message.
-     * @param {string} message 
-     */
-    const showToast = (message) => {
-        const toast = document.createElement('div');
-        toast.className = 'toast';
-        toast.textContent = message;
-        document.body.appendChild(toast);
-        
-        // Trigger reflow for animation
-        void toast.offsetWidth; 
-        toast.classList.add('show');
-        
-        setTimeout(() => {
-            toast.classList.remove('show');
-            setTimeout(() => toast.remove(), 300);
-        }, 3000);
-    };
-
-    /**
-     * Creates falling confetti elements.
-     */
-    const createConfetti = () => {
-        for (let i = 0; i < 70; i++) {
-            const confetti = document.createElement('div');
-            confetti.classList.add('confetti');
-            confetti.style.left = `${Math.random() * 100}vw`;
-            confetti.style.animationDuration = `${Math.random() * 2 + 1}s`;
-            confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
-            document.body.appendChild(confetti);
-            
-            setTimeout(() => confetti.remove(), 3000);
-        }
-    };
-
-    /**
-     * Toggles the disabled state of interactive UI elements.
-     * @param {boolean} isDisabled 
-     */
-    const toggleUI = (isDisabled) => {
-        elements.inputName.disabled = isDisabled;
-        elements.btnAdd.disabled = isDisabled;
-        elements.btnDraw.disabled = isDisabled;
-        
-        if (!isDisabled) {
-            elements.inputName.focus();
-        }
-    };
-
-    /**
-     * Renders the list of friends, each with a remove button.
-     * @param {string[]} friends
-     */
-    const renderFriendsList = (friends) => {
-        elements.listContainer.innerHTML = '';
-        const fragment = document.createDocumentFragment();
-
-        friends.forEach(friend => {
-            const li = document.createElement('li');
-
-            const span = document.createElement('span');
-            span.textContent = friend;
-            li.appendChild(span);
-
-            const removeBtn = document.createElement('button');
-            removeBtn.type = 'button';
-            removeBtn.className = 'button-remove';
-            removeBtn.textContent = '✕';
-            removeBtn.setAttribute('aria-label', `Eliminar a ${friend} de la lista`);
-            removeBtn.addEventListener('click', () => handleRemoveFriend(friend));
-            li.appendChild(removeBtn);
-
-            fragment.appendChild(li);
-        });
-
-        elements.listContainer.appendChild(fragment);
-    };
-
-    /**
-     * Renders the Secret Santa pairs with an animation delay.
-     * @param {Object[]} pairs 
-     */
-    const renderResults = (pairs) => {
-        elements.resultContainer.innerHTML = '';
-        const fragment = document.createDocumentFragment();
-
-        pairs.forEach((pair, index) => {
-            const li = document.createElement('li');
-            
-            li.textContent = `${pair.giver} le regala a `;
-            
-            const strong = document.createElement('strong');
-            strong.textContent = pair.receiver;
-            li.appendChild(strong);
-            
-            li.style.animationDelay = `${index * 0.2}s`;
-            li.classList.add('result-item-anim');
-            
-            fragment.appendChild(li);
-        });
-
-        elements.resultContainer.appendChild(fragment);
-    };
-
-    // --- Event Handlers ---
-
-    const handleAddFriend = () => {
-        const name = elements.inputName.value.trim();
-
-        if (!name) {
-            showToast("Por favor, inserte un nombre.");
-            elements.inputName.value = '';
-            elements.inputName.focus();
-            return;
-        }
-
-        if (!isValidName(name)) {
-            showToast("Por favor, inserte un nombre válido (letras requeridas).");
-            return;
-        }
-
-        if (isDuplicate(name, friendsList)) {
-            showToast("Este nombre ya ha sido agregado. Por favor, inserte un nombre diferente.");
-            elements.inputName.value = '';
-            elements.inputName.focus();
-            return;
-        }
-
-        // State update
-        friendsList = [...friendsList, name];
-        
-        // UI updates
-        renderFriendsList(friendsList);
-        elements.resultContainer.innerHTML = '';
-        
-        elements.inputName.value = '';
-        elements.inputName.focus();
-    };
-
-    const handleRemoveFriend = (name) => {
-        friendsList = friendsList.filter(friend => friend !== name);
-        renderFriendsList(friendsList);
-        elements.resultContainer.innerHTML = '';
-        elements.inputName.focus();
-    };
-
-    const handleDraw = () => {
-        if (friendsList.length < 2) {
-            showToast("Debes agregar al menos 2 amigos para realizar el sorteo.");
-            return;
-        }
-
-        // Disable UI during calculation and animation
-        toggleUI(true);
-
-        const shuffled = shuffleArray(friendsList);
-        const pairs = generatePairs(shuffled);
-        
-        renderResults(pairs);
-        createConfetti();
-        
-        // Calculate total animation time to re-enable UI (pairs.length * 200ms + padding)
-        const animationTime = (pairs.length * 200) + 1500;
-        
-        setTimeout(() => {
-            toggleUI(false);
-        }, animationTime);
-    };
-
-    const handleKeyDown = (e) => {
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            if (!elements.btnAdd.disabled) {
-                handleAddFriend();
-            }
-        }
-    };
-
-    // --- Initialization ---
-
-    const init = () => {
-        elements.btnAdd.addEventListener('click', handleAddFriend);
-        elements.inputName.addEventListener('keydown', handleKeyDown);
-        elements.btnDraw.addEventListener('click', handleDraw);
-    };
-
-    // Start application
-    init();
-})();
+    });
+}

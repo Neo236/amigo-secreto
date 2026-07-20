@@ -3,68 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Aplicación interactiva para sortear tu Amigo Secreto.">
-    <meta name="theme-color" content="#4158D0">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎁</text></svg>">
+    <meta name="description" content="Sorteo de amigo secreto en el navegador: cargás los participantes y arma todas las asignaciones de una vez, sin que nadie se toque a sí mismo. Challenge de Alura Latam · Oracle Next Education (ONE).">
+    <meta name="theme-color" content="#4B69FD">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect x=%2222%22 y=%2244%22 width=%2256%22 height=%2240%22 rx=%224%22 fill=%22%23fe652b%22/><rect x=%2218%22 y=%2236%22 width=%2264%22 height=%2212%22 rx=%223%22 fill=%22%23ff7a44%22/><rect x=%2244%22 y=%2236%22 width=%2212%22 height=%2248%22 fill=%22%23FFF9EB%22/><circle cx=%2242%22 cy=%2230%22 r=%229%22 fill=%22none%22 stroke=%22%23FFF9EB%22 stroke-width=%225%22/><circle cx=%2258%22 cy=%2230%22 r=%229%22 fill=%22none%22 stroke=%22%23FFF9EB%22 stroke-width=%225%22/></svg>">
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-    <title>Amigo Secreto | Sorteo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;400;700;900&family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
+    <title>Amigo Secreto</title>
 </head>
 
 <body>
-    <div class="background-anim" aria-hidden="true">
-        <div class="blob blob-1"></div>
-        <div class="blob blob-2"></div>
-        <div class="blob blob-3"></div>
-    </div>
+    <details class="info-menu">
+        <summary>
+            <span class="info-badge" aria-hidden="true">i</span> Info
+        </summary>
+        <div class="info-panel">
+            <h3>Amigo Secreto</h3>
+            <p>Challenge de <strong>Alura Latam</strong> · Programa <strong>Oracle Next Education (ONE)</strong>.</p>
+            <p>Sorteo en un solo ciclo: nadie se toca a sí mismo y no quedan subgrupos cerrados.</p>
+            <ul class="info-tech">
+                <li><a href="https://developer.mozilla.org/es/docs/Web/HTML" target="_blank" rel="noopener">HTML</a></li>
+                <li><a href="https://developer.mozilla.org/es/docs/Web/CSS" target="_blank" rel="noopener">CSS</a></li>
+                <li><a href="https://developer.mozilla.org/es/docs/Web/JavaScript" target="_blank" rel="noopener">JavaScript</a></li>
+                <li class="info-tech-plain">sin dependencias</li>
+            </ul>
+            <a class="info-github" href="https://github.com/Neo236/amigo-secreto" target="_blank" rel="noopener">Ver código en GitHub ↗</a>
+        </div>
+    </details>
 
     <main class="main-content">
-        <div class="glass-panel">
-            <header class="header-banner">
-                <img src="assets/amigo-secreto.png" alt="Logo de Amigo Secreto" class="logo" width="150" height="150">
-                <h1 class="main-title">Amigo Secreto</h1>
-                <p class="subtitle">Agrega a tus amigos y deja que la magia elija</p>
-            </header>
-            
-            <section class="app-section" aria-labelledby="section-title">
-                <h2 id="section-title" class="visually-hidden">Zona de registro y sorteo</h2>
-                
-                <div class="input-wrapper">
-                    <label for="amigo" class="visually-hidden">Nombre del amigo</label>
-                    <div class="input-group">
-                        <span class="icon-user" aria-hidden="true">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                        </span>
-                        <input type="text" id="amigo" class="input-title" placeholder="Ej. María, Juan, Carlos..." aria-label="Escribe el nombre de un amigo" autocomplete="off">
-                        <button class="button-add" aria-label="Añadir amigo a la lista">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                        </button>
-                    </div>
-                </div>
-               
-                <div class="lists-container">
-                    <div class="list-card">
-                        <h3 class="list-heading">Participantes</h3>
-                        <ul id="listaAmigos" class="name-list" aria-label="Lista de amigos agregados" role="list"></ul>
-                    </div>
-                    <div class="list-card result-card">
-                        <h3 class="list-heading">Resultados</h3>
-                        <ul id="resultado" class="result-list" aria-live="polite" role="list"></ul>
-                    </div>
-                </div>
+        <header class="header-banner">
+            <h1 class="main-title">Amigo Secreto</h1>
+            <img src="assets/amigo-secreto.png" alt="Imagen representativa de amigo secreto">
+        </header>
 
-                <div class="button-container">
-                    <button class="button-draw" aria-label="Sortear amigo secreto">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><polygon points="10 8 16 12 10 16 10 8"></polygon></svg>
-                        <span>Sortear Ahora</span>
-                    </button>
-                </div>
-            </section>
-        </div>
+        <section class="input-section">
+            <h2 class="section-title">Digite el nombre de sus amigos</h2>
+            <div class="input-wrapper">
+                <input type="text" id="amigo" class="input-name" placeholder="Escribe un nombre">
+                <button class="button-add">Añadir</button>
+            </div>
+
+            <ul id="listaAmigos" class="name-list" role="list"></ul>
+            <ul id="resultado" class="result-list" aria-live="polite"></ul>
+
+            <div class="button-container">
+                <button class="button-draw" aria-label="Sortear amigo secreto">
+                    <img src="assets/play_circle_outline.png" alt="Ícono para sortear">
+                    Sortear amigo
+                </button>
+            </div>
+        </section>
     </main>
 
-    <script src="app.js" defer></script>
+    <script type="module" src="app.js"></script>
 </body>
 </html>
