@@ -151,20 +151,64 @@ function actualizarLista() {
 }
 
 // --- Sortear ---
+
+// Color por lugar en el ciclo: hues repartidos parejo por el círculo cromático, arrancando
+// en azul. Tinte claro de fondo + borde y texto del mismo hue (legible sobre el crema).
+function colorDeNombre(indice, total) {
+    const hue = Math.round((220 + (indice * 360) / total) % 360);
+    return {
+        fondo: `hsl(${hue} 85% 93%)`,
+        borde: `hsl(${hue} 70% 45%)`,
+        texto: `hsl(${hue} 72% 30%)`,
+    };
+}
+
+function chipResultado(nombre, color) {
+    const chip = document.createElement('span');
+    chip.className = 'result-chip';
+    chip.textContent = nombre;
+    chip.style.backgroundColor = color.fondo;
+    chip.style.borderColor = color.borde;
+    chip.style.color = color.texto;
+    return chip;
+}
+
 function sortearAmigo() {
     if (amigos.length < 3) {
         mostrarAviso('Agregá al menos 3 amigos: con menos, cada uno sabría de una a quién le tocó.');
         return;
     }
 
-    // Un solo ciclo: cada uno le regala al siguiente y el último al primero. Así nadie
-    // se toca a sí mismo y no quedan subgrupos cerrados.
+    // Un solo ciclo: cada uno le regala al siguiente y el último al primero. Así a nadie
+    // le toca su propio nombre y nadie se queda sin regalo.
     const pares = sortear(amigos);
+
+    // Cada participante recibe un color según su lugar en el ciclo (el orden de los "de").
+    // Como es un solo círculo, el color de quien recibe es el del siguiente que regala.
+    const orden = pares.map((par) => par.de);
+    const colorPorNombre = new Map();
+    orden.forEach((nombre, i) => colorPorNombre.set(nombre, colorDeNombre(i, orden.length)));
 
     resultado.innerHTML = '';
     for (const { de, para } of pares) {
         const li = document.createElement('li');
-        li.textContent = `${de} → ${para}`;
+        li.className = 'result-item';
+
+        const flecha = document.createElement('span');
+        flecha.className = 'result-arrow';
+        flecha.textContent = '→';
+        flecha.setAttribute('aria-hidden', 'true');
+
+        const paraLector = document.createElement('span');
+        paraLector.className = 'sr-only';
+        paraLector.textContent = ' le regala a ';
+
+        li.append(
+            chipResultado(de, colorPorNombre.get(de)),
+            flecha,
+            paraLector,
+            chipResultado(para, colorPorNombre.get(para)),
+        );
         resultado.appendChild(li);
     }
 }

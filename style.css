@@ -6,7 +6,6 @@
     --color-button-hover: #e55720;
     --color-text: #444444;
     --color-white: #FFFFFF;
-    --color-result: #178017;   /* verde de resultado con contraste AA sobre el crema */
 }
 
 /* Estilos generales */
@@ -130,11 +129,47 @@ ul {
 }
 
 .result-list {
-    margin-top: 15px;
-    color: var(--color-result);
-    font-size: 22px;
-    font-weight: bold;
-    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin-top: 18px;
+}
+
+.result-item {
+    display: inline-flex;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+}
+
+/* Cada nombre del resultado es un chip con el color de su lugar en el ciclo */
+.result-chip {
+    padding: 5px 16px;
+    border: 2px solid;
+    border-radius: 20px;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.result-arrow {
+    color: var(--color-text);
+    font-size: 20px;
+    font-weight: 700;
+}
+
+/* Texto solo para lectores de pantalla */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
 }
 
 /* Botón de sortear título */
