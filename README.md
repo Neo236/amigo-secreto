@@ -16,11 +16,14 @@ la interfaz y los assets originales del challenge.
 
 ## ✨ Qué hace
 
-* **Carga de participantes** con validación: nada de nombres vacíos, repetidos, sin
-  ninguna letra ni de largo desmedido.
+* **Carga de participantes** con validación en la página: nada de nombres vacíos,
+  repetidos, sin ninguna letra ni de largo desmedido. Los avisos salen en pantalla, no
+  como alertas del navegador.
+* **Editá y quitá** cualquier participante de la lista antes de sortear.
 * **Sorteo completo:** no elige un ganador, arma la ronda entera. Cada participante le
-  regala a otro y recibe de un tercero.
-* **Soporte de teclado:** Enter agrega el nombre sin sacar las manos del teclado.
+  regala a otro y recibe de un tercero (mínimo 3 para que tenga sentido).
+* **Soporte de teclado:** Enter agrega el nombre; en edición, Enter guarda y Escape
+  cancela.
 * **Cero dependencias en tiempo de ejecución:** HTML, CSS y JavaScript a secas. No hay
   build: lo que está en el repositorio es lo que corre en producción.
 

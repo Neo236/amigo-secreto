@@ -312,3 +312,102 @@ ul {
     outline: 3px solid var(--color-button);
     outline-offset: 2px;
 }
+
+/* Lista de participantes: cada ítem con acciones de editar y quitar */
+.name-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 3px 0;
+}
+
+.name-text {
+    word-break: break-word;
+}
+
+.name-btn {
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    box-shadow: none;
+    background-color: transparent;
+    color: var(--color-primary);
+    font-size: 15px;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.name-btn:hover {
+    background-color: rgba(75, 105, 253, 0.14);
+}
+
+.name-btn.del {
+    color: var(--color-button);
+}
+
+.name-btn.del:hover {
+    background-color: rgba(254, 101, 43, 0.16);
+}
+
+.name-btn.ok {
+    color: #178017;
+}
+
+.name-btn.ok:hover {
+    background-color: rgba(23, 128, 23, 0.14);
+}
+
+.edit-input {
+    max-width: 220px;
+    padding: 5px 12px;
+    border: 2px solid var(--color-primary);
+    border-radius: 16px;
+    font-family: "Inter", sans-serif;
+    font-size: 16px;
+    color: var(--color-text);
+}
+
+.edit-input:focus-visible {
+    outline: 3px solid var(--color-button);
+    outline-offset: 2px;
+}
+
+/* Aviso en la página (toast) — reemplaza los alert() del navegador */
+.aviso {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-16px);
+    max-width: min(90vw, 420px);
+    padding: 12px 20px;
+    background-color: var(--color-button);
+    color: var(--color-white);
+    font-family: "Inter", sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    line-height: 1.35;
+    text-align: center;
+    border-radius: 24px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    z-index: 200;
+}
+
+.aviso.visible {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .aviso {
+        transition: opacity 0.25s ease;
+    }
+}
