@@ -1,93 +1,79 @@
-# 🎁 Amigo Secreto
+# Amigo Secreto
 
 [![CI](https://github.com/Neo236/amigo-secreto/actions/workflows/ci.yml/badge.svg)](https://github.com/Neo236/amigo-secreto/actions/workflows/ci.yml)
-![JavaScript](https://img.shields.io/badge/JavaScript-ES2022-f7df1e.svg)
-![Sin dependencias](https://img.shields.io/badge/dependencias-0-brightgreen.svg)
 
-> Challenge de **Alura Latam** · Programa **Oracle Next Education (ONE)**
+Un sorteo de amigo secreto para el navegador. Cargás los nombres y arma toda la ronda de
+una: a cada persona le asigna a quién le regala, sin que a nadie le toque su propio nombre.
 
-Sorteo de amigo secreto en el navegador: cargás los participantes y la aplicación arma
-todas las asignaciones de una vez, cuidando que a nadie le toque su propio nombre.
-Conserva la interfaz y los assets originales del challenge.
+Lo hice para el challenge de **Alura Latam** (programa Oracle Next Education). La interfaz
+es la del challenge; lo que le puse encima es la lógica del sorteo con tests, la gestión de
+la lista y algunos detalles de accesibilidad.
 
-### 👉 [Probalo acá](https://neo236.github.io/amigo-secreto/)
+**[Probalo acá →](https://neo236.github.io/amigo-secreto/)**
 
-![Amigo Secreto: participantes cargados y el sorteo ya resuelto](assets/captura-de-pantalla.png)
+![Amigo Secreto con cinco participantes y el sorteo resuelto, cada nombre con su color](assets/captura-de-pantalla.png)
 
-## ✨ Qué hace
+## Qué se puede hacer
 
-* **Carga de participantes** con validación en la página: nada de nombres vacíos,
-  repetidos, sin ninguna letra ni de largo desmedido. Los avisos salen en pantalla, no
-  como alertas del navegador.
-* **Gestión de la lista:** editá o quitá cualquier participante, o vaciá la lista entera
-  (con una confirmación antes de borrar).
-* **Sorteo completo:** no elige un ganador, arma la ronda entera. Cada participante le
-  regala a otro y recibe de un tercero (mínimo 3 para que tenga sentido).
-* **Resultado a colores:** cada nombre lleva su propio color, repartido por el círculo
-  cromático, así se sigue el ciclo de un vistazo.
-* **Soporte de teclado:** Enter agrega el nombre; en edición, Enter guarda y Escape
-  cancela.
-* **Cero dependencias en tiempo de ejecución:** HTML, CSS y JavaScript a secas. No hay
-  build: lo que está en el repositorio es lo que corre en producción.
+- Agregar, editar o quitar nombres, o vaciar la lista entera (pregunta antes de borrar).
+- La validación es en la página, no con los `alert` del navegador: avisa si el nombre está
+  vacío, repetido o es demasiado largo.
+- El sorteo arma la ronda completa (hace falta un mínimo de 3). En el resultado cada nombre
+  lleva su color: como todo es un solo círculo, seguís quién le regala a quién de un vistazo.
+- Todo anda con teclado: Enter agrega, y editando un nombre Enter guarda y Escape cancela.
 
-## 🧠 Cómo sortea
+No hay dependencias en runtime ni paso de build: es HTML, CSS y JavaScript, y lo que está en
+el repo es lo que corre.
 
-El truco está en cómo se arman los pares. Se mezcla la lista con Fisher-Yates y después
-**cada uno le regala al siguiente, y el último al primero**: un solo círculo.
+## El sorteo
+
+La parte con algo de sustancia es cómo se arman los pares. Si sortearas cada regalo por
+separado, podrían quedar dos personas regalándose entre ellas y el resto aparte. Para
+evitarlo, mezclo la lista (Fisher-Yates) y hago que cada uno le regale al siguiente, y el
+último al primero: un solo círculo.
 
 ```
-Mezclada: [María, Iñaki, Lautaro]
-
-María ──▶ Iñaki ──▶ Lautaro
-  ▲                    │
-  └────────────────────┘
+Mezclada:  Ana · Beto · Caro
+Ronda:     Ana → Beto → Caro → Ana
 ```
 
-Eso resuelve dos problemas de una: a nadie le toca su propio nombre, y no quedan
-subgrupos cerrados —dos personas intercambiándose entre ellas mientras el resto queda
-aparte—, que es exactamente lo que pasa si se sortea cada par por separado.
+Así nadie se toca a sí mismo y no quedan subgrupos cerrados.
 
-## 🚀 Cómo correrlo
+## Correrlo
 
-La aplicación usa módulos ES, así que hay que servirla por HTTP (abrir el `index.html`
-con doble clic no alcanza: el navegador bloquea los módulos sobre `file://`).
+Usa módulos ES, así que hay que servirlo por HTTP (abrir el `index.html` a mano no alcanza):
 
 ```bash
-npx serve .        # o: python3 -m http.server
+npx serve .
 ```
 
-## 🧪 Tests
+## Tests
 
 ```bash
 npm install
 npm test
 ```
 
-22 tests sobre la lógica del sorteo, que vive aparte del DOM en `sorteo.js`. El más
-interesante recorre el resultado como un grafo y verifica que forme **un único ciclo**:
-sin eso, un sorteo podría partirse en subgrupos y nadie se daría cuenta.
+La lógica vive en `sorteo.js`, separada del DOM, con 22 tests en [Vitest](https://vitest.dev).
+El que más me interesa recorre el resultado como un grafo y comprueba que sea un único ciclo:
+sin eso, un sorteo podría partirse en subgrupos sin que nadie lo note.
 
-`vitest` es la única dependencia y es de desarrollo: la página no la usa.
-
-## 📂 Estructura
+## Cómo está armado
 
 ```
-├── assets/         Imágenes originales del challenge (logo e ícono de sortear)
-├── index.html      Estructura
-├── style.css       Estilos originales de Alura
-├── sorteo.js       Lógica del sorteo — funciones puras, sin DOM
-├── app.js          Une la lógica con la pantalla
-└── sorteo.test.js  Tests de la lógica
+index.html      la pantalla
+style.css       los estilos (los originales de Alura)
+sorteo.js       la lógica, sin DOM
+app.js          conecta la lógica con la pantalla
+sorteo.test.js  los tests
 ```
 
-## ♿ Accesibilidad
+## Accesibilidad
 
-* El resultado vive en una región `aria-live="polite"`, así que un lector de pantalla
-  anuncia el sorteo apenas aparece.
-* El botón de sortear lleva `aria-label`: su ícono es una imagen, no texto.
-* Los nombres se insertan con `textContent`, nunca con `innerHTML`: un participante
-  llamado `<img onerror=...>` es texto, no código.
+El resultado va en una región `aria-live`, así un lector de pantalla lo anuncia al aparecer.
+Los botones de ícono llevan `aria-label` y el foco de teclado es visible. Los nombres se
+insertan con `textContent`, nunca con `innerHTML`.
 
-## 🧑‍💻 Autor
+---
 
-Desarrollado por **Lautaro "Neo" Mambrin**.
+Hecho por Lautaro Mambrin.
