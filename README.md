@@ -2,36 +2,35 @@
 
 [![CI](https://github.com/Neo236/amigo-secreto/actions/workflows/ci.yml/badge.svg)](https://github.com/Neo236/amigo-secreto/actions/workflows/ci.yml)
 
-Un sorteo de amigo secreto para el navegador. Cargás los nombres y arma toda la ronda de
-una: a cada persona le asigna a quién le regala, sin que a nadie le toque su propio nombre.
+Un sorteo de amigo secreto que corre entero en el navegador. Cargás los nombres, tocás
+sortear y te arma la ronda completa de una: a cada persona le asigna a quién le regala, sin
+que a nadie le toque su propio nombre.
 
-Lo hice para el challenge de **Alura Latam** (programa Oracle Next Education). La base visual
-es la del challenge; encima le sumé la lógica del sorteo con tests, la gestión de la lista
-(agregar, editar, quitar, vaciar), el resultado a colores y detalles de accesibilidad.
+Salió del challenge de **Alura Latam** (programa Oracle Next Education). Partí de la base
+visual del challenge y encima le puse la lógica del sorteo con sus tests, la gestión de la
+lista (agregar, editar, quitar, vaciar), el resultado a colores y varios detalles de
+accesibilidad.
 
-**[Probalo acá →](https://neo236.github.io/amigo-secreto/)**
+**[Probalo online →](https://neo236.github.io/amigo-secreto/)**
 
-![Amigo Secreto con cinco participantes y el sorteo resuelto, cada nombre con su color](assets/captura-de-pantalla.png)
+![La app con cinco participantes y el sorteo resuelto, cada nombre con su color](assets/captura-de-pantalla.png)
 
-## Qué se puede hacer
+## Qué hace
 
-- Agregar, editar o quitar nombres, o vaciar la lista entera (pregunta antes de borrar).
-- La validación es en la página, no con los `alert` del navegador: avisa si el nombre está
-  vacío, repetido o es demasiado largo.
-- El sorteo arma la ronda completa (hace falta un mínimo de 3). En el resultado cada nombre
-  lleva su color: como todo es un solo círculo, seguís quién le regala a quién de un vistazo.
-- Todo anda con teclado: Enter agrega, y editando un nombre Enter guarda y Escape cancela.
+- Armás la lista a mano: agregar, editar, quitar, o vaciarla entera (te pregunta antes de
+  borrar).
+- La validación es en la misma página, sin los `alert` del navegador: te avisa si el nombre
+  está vacío, repetido o es larguísimo.
+- El sorteo necesita al menos 3 personas y arma la ronda completa. Cada nombre sale con su
+  color y, como todo es un único círculo, seguís de un vistazo quién le regala a quién.
+- Se maneja con teclado: Enter agrega; editando un nombre, Enter guarda y Escape cancela.
 
-El proyecto no tiene dependencias, ni para el sitio ni para los tests. El sitio son HTML, CSS
-y JS que el navegador corre tal cual (lo único externo son las tipografías de Google Fonts,
-con fallback del sistema); los tests usan el runner integrado de Node, sin instalar nada.
+## Cómo funciona el sorteo
 
-## El sorteo
-
-La parte con algo de sustancia es cómo se arman los pares. Si sortearas cada regalo por
-separado, podrían quedar dos personas regalándose entre ellas y el resto aparte. Para
-evitarlo, mezclo la lista (Fisher-Yates) y hago que cada uno le regale al siguiente, y el
-último al primero: un solo círculo.
+Es la parte que tiene algo de miga. Si sorteás cada regalo por separado, podés terminar con
+dos personas regalándose entre ellas y el resto por otro lado. Para que no pase, mezclo la
+lista (Fisher-Yates) y hago que cada uno le regale al siguiente, y el último al primero.
+Queda un solo círculo:
 
 ```
 Mezclada:  Ana · Beto · Caro
@@ -42,41 +41,48 @@ Así nadie se toca a sí mismo y no quedan subgrupos cerrados.
 
 ## Correrlo
 
-No necesita nada: abrí `index.html` en el navegador (doble clic) y funciona. Para eso los
-scripts se cargan de forma clásica (sin módulos ES), así anda tal cual desde el disco.
+La app no necesita nada: abrí `index.html` con doble clic y listo. No hay build ni servidor,
+y los scripts se cargan de forma clásica, así que funciona directo desde el disco. Lo único
+que baja de afuera son las tipografías de Google Fonts; si no cargan, usa las del sistema.
 
-Si querés solo la app —sin los tests ni el tooling—, bajá el zip desde
-[Releases](https://github.com/Neo236/amigo-secreto/releases). O probala online en
-[neo236.github.io/amigo-secreto](https://neo236.github.io/amigo-secreto/).
+¿Querés solo la app para guardarla o pasarla? Bajá el zip de la última
+[release](https://github.com/Neo236/amigo-secreto/releases): trae nada más que el HTML, el
+CSS, el JS y las imágenes.
 
 ## Tests
 
-Sin instalar nada: los corre el runner integrado de Node (hace falta Node 20+).
+La lógica del sorteo vive en `sorteo.js`, aparte del DOM, y tiene su tanda de tests en
+`sorteo.test.js`. Corren con el runner que ya trae Node (`node --test`): no hay librerías ni
+`node_modules`, solo hace falta tener Node 20 o más instalado.
 
 ```bash
-npm test        # o directamente: node --test
+node --test        # o, si preferís: npm test
 ```
 
-La lógica vive en `sorteo.js`, separada del DOM, con 22 tests. El que más me interesa recorre
-el resultado como un grafo y comprueba que sea un único ciclo: sin eso, un sorteo podría
-partirse en subgrupos sin que nadie lo note.
+Son 22 tests. El que más me importa recorre el resultado como un grafo y comprueba que sea un
+solo ciclo: sin esa verificación, un sorteo podría partirse en subgrupos y nadie se daría
+cuenta.
 
 ## Cómo está armado
 
 ```
 index.html      la pantalla
-style.css       los estilos (base de Alura + lo agregado)
-sorteo.js       la lógica, sin DOM
+style.css       los estilos (base de Alura + lo que agregué)
+sorteo.js       la lógica, sin tocar el DOM
 app.js          conecta la lógica con la pantalla
 sorteo.test.js  los tests
 ```
 
 ## Accesibilidad
 
-El resultado va en una región `aria-live`, así un lector de pantalla lo anuncia al aparecer.
-Los botones de ícono llevan `aria-label` y el foco de teclado es visible. Los nombres se
+El resultado va en una región `aria-live`, así un lector de pantalla lo lee al aparecer. Los
+botones de ícono tienen su `aria-label`, el foco de teclado se ve al navegar, y los nombres se
 insertan con `textContent`, nunca con `innerHTML`.
+
+## Licencia
+
+MIT — ver [LICENSE](LICENSE).
 
 ---
 
-Hecho por Lautaro Mambrin.
+Hecho por Lautaro Sebastian Mambrin (Neo236).
